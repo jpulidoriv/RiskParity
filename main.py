@@ -19,7 +19,7 @@ avgAnnualReturnTLT = (avgDailyReturnTLT * 252)
 volDailyTLT = logReturns["TLT"].std()
 volAnnualTLT = (volDailyTLT * np.sqrt(252))
 
-avgDailyReturnGLD= logReturns["GLD"].mean()
+avgDailyReturnGLD = logReturns["GLD"].mean()
 avgAnnualReturnGLD = (avgDailyReturnGLD * 252)
 volDailyGLD = logReturns["GLD"].std()
 volAnnualGLD = (volDailyGLD * np.sqrt(252))
@@ -57,10 +57,9 @@ sharpe = annualReturns / annualVolatility
 portfolio_equity = np.exp(portfolios_log.cumsum())
 
 def max_drawdown(equity_df):
-    # equity_df es un DataFrame con columnas = portfolios
     roll_max = equity_df.cummax()
     dd = equity_df / roll_max - 1.0
-    return dd.min()   # Series: Max DD por columna
+    return dd.min()  
 
 mdd = max_drawdown(portfolio_equity)
 
@@ -76,7 +75,7 @@ plt.figure(figsize=(10, 6))
 for col in portfolio_equity.columns:
     plt.plot(portfolio_equity.index, portfolio_equity[col], label=col)
 
-plt.title("Equity Curves – SP500 vs Naive vs Volatility-Parity")
+plt.title("Equity Curves – SP500 vs Naive vs Volatility Parity")
 plt.xlabel("Date")
 plt.ylabel("Equity)")
 plt.legend()
