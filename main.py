@@ -3,29 +3,32 @@ import pandas as pd
 import yfinance as yf
 import matplotlib.pyplot as plt
 
-data = yf.download(["SPY", "TLT", "GLD"], start = "2015-01-01")
+data = yf.download(["SPY", "TLT", "GLD"], start = "2005-01-01", auto_adjust=True)
 
 prices = data["Close"].dropna()
 logReturns = np.log(prices / prices.shift(1))
 logReturns = logReturns.dropna()
 
-avgDailyReturnSPY = logReturns["SPY"].mean()
+trainReturns = logReturns.loc["2005-01-01":"2014-12-31"]
+testReturns = logReturns.loc["2015-01-01":]
+
+avgDailyReturnSPY = testReturns["SPY"].mean()
 avgAnnualReturnSPY = (avgDailyReturnSPY * 252)
-volDailySPY = logReturns["SPY"].std()
+volDailySPY = testReturns["SPY"].std()
 volAnnualSPY = (volDailySPY * np.sqrt(252))
 
-avgDailyReturnTLT = logReturns["TLT"].mean()
+avgDailyReturnTLT = testReturns["TLT"].mean()
 avgAnnualReturnTLT = (avgDailyReturnTLT * 252)
-volDailyTLT = logReturns["TLT"].std()
+volDailyTLT = testReturns["TLT"].std()
 volAnnualTLT = (volDailyTLT * np.sqrt(252))
 
-avgDailyReturnGLD = logReturns["GLD"].mean()
+avgDailyReturnGLD = testReturns["GLD"].mean()
 avgAnnualReturnGLD = (avgDailyReturnGLD * 252)
-volDailyGLD = logReturns["GLD"].std()
+volDailyGLD = testReturns["GLD"].std()
 volAnnualGLD = (volDailyGLD * np.sqrt(252))
 
-covMatrix = logReturns.cov()
-corrMatrix = logReturns.corr()
+covMatrix = testReturns.cov()
+corrMatrix = testReturns.corr()
 
 #Portfolio 100% SPY
 w_spy = np.array([0.0, 1.0, 0.0])
@@ -34,16 +37,16 @@ w_spy = np.array([0.0, 1.0, 0.0])
 w_naive = np.array([1/3, 1/3, 1/3])
 
 #Portfolio Volatility Parity
-volDaily = logReturns.std()
+volDaily = trainReturns.std()
 
 inv_vol = 1 / volDaily
 #Normalizamos cuando dividimos todos por su suma
 w_volpar = inv_vol / inv_vol.sum()
 w_volpar = w_volpar.values
 
-port_spy = logReturns.dot(w_spy)
-port_naive = logReturns.dot(w_naive)
-port_volpar = logReturns.dot(w_volpar)
+port_spy = testReturns.dot(w_spy)
+port_naive = testReturns.dot(w_naive)
+port_volpar = testReturns.dot(w_volpar)
 
 portfolios_log = pd.DataFrame ({
     "SP500": port_spy,
@@ -87,4 +90,4 @@ profitability = ((portfolio_equity - 1) * 100)
 profitability = profitability.tail(1)
 print (profitability)
 print (metrics.round(2))
-print(logReturns.columns)
+print(testReturns.columns)
