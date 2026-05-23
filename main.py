@@ -27,9 +27,6 @@ avgAnnualReturnGLD = (avgDailyReturnGLD * 252)
 volDailyGLD = testReturns["GLD"].std()
 volAnnualGLD = (volDailyGLD * np.sqrt(252))
 
-covMatrix = testReturns.cov()
-corrMatrix = testReturns.corr()
-
 #Portfolio 100% SPY
 w_spy = np.array([0.0, 1.0, 0.0])
 
