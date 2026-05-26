@@ -70,19 +70,6 @@ metrics = pd.DataFrame({
     "Max DD (%)":        mdd * 100
 })
 
-plt.figure(figsize=(10, 6))
-
-for col in portfolio_equity.columns:
-    plt.plot(portfolio_equity.index, portfolio_equity[col], label=col)
-
-plt.title("Equity Curves – SP500 vs Naive vs Volatility Parity")
-plt.xlabel("Date")
-plt.ylabel("Equity)")
-plt.legend()
-plt.grid(True)
-plt.tight_layout()
-plt.show()
-
 profitability = ((portfolio_equity - 1) * 100)
 profitability = profitability.tail(1)
 print (profitability)
